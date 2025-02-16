@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background: url('image.jpg') no-repeat center center fixed;
+    background: url("https://via.placeholder.com/1920x1080") no-repeat center center fixed;
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -134,7 +134,7 @@ body {
     border-radius: 2px;
   }
   .dark-theme {
-    background: #1c1c1c url('image.jpg') no-repeat center center fixed;
+    background: #1c1c1c url("https://via.placeholder.com/1920x1080") no-repeat center center fixed;
     background-size: cover;
     color: #fff;
   }
@@ -172,5 +172,12 @@ body {
   .dark-theme .lab-goal,
   .dark-theme .author-info {
     color: #FFFFFF;
+  }
+  
+  .bg-alt {
+    background-color: #444 !important;
+  }
+  .res-alt {
+    background-color: #ff4444 !important;
   }
   
