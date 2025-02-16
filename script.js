@@ -1,4 +1,4 @@
-window.onload = function() { 
+window.onload = function() {
     let a = '';
     let b = '';
     let expressionResult = '';
@@ -52,7 +52,6 @@ window.onload = function() {
       outputElement.innerHTML = 0;
     };
   
-    // Логика для смены знака
     document.getElementById('btn_op_sign').onclick = function() {
       if (!selectedOperation) {
         if (a === '') {
@@ -68,6 +67,20 @@ window.onload = function() {
           b = (-parseFloat(b)).toString();
         }
         outputElement.innerHTML = b;
+      }
+    };
+  
+    document.getElementById('btn_op_percent').onclick = function() {
+      if (!selectedOperation) {
+        if (a !== '') {
+          a = (parseFloat(a) / 100).toString();
+          outputElement.innerHTML = a;
+        }
+      } else {
+        if (b !== '') {
+          b = ((parseFloat(a) * parseFloat(b)) / 100).toString();
+          outputElement.innerHTML = b;
+        }
       }
     };
   
