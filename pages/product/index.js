@@ -36,7 +36,7 @@ export class ProductPage {
 
     getHTML() {
         return `
-            <div id="product-page"></div>
+            <div id="product-page" class="class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;""></div>
         `;
     }
 
@@ -50,9 +50,6 @@ export class ProductPage {
         const html = this.getHTML();
         this.parent.insertAdjacentHTML('beforeend', html);
 
-        const backButton = new BackButtonComponent(this.pageRoot);
-        backButton.render(this.clickBack.bind(this));
-
         const data = this.getData();
 
         if (!data || !data.title) {
@@ -62,5 +59,7 @@ export class ProductPage {
 
         const product = new ProductComponent(this.pageRoot);
         product.render(data);
+        const backButton = new BackButtonComponent(this.pageRoot);
+        backButton.render(this.clickBack.bind(this));
     }
 }
