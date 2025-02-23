@@ -9,7 +9,8 @@ class DogsRepository {
   }
 
   static write(json) {
-    this.db.writeFile(json);
+    const stringifiedData = JSON.stringify(json, null, 2);
+    this.db.writeFile(stringifiedData);
   }
 }
 

@@ -43,6 +43,7 @@ class DogsDAO {
   static insert(dog) {
     this._validate(dog);
     const dogs = DogsRepository.read();
+    
     DogsRepository.write([...dogs, dog]);
     return new this(dog.id, dog.src, dog.title, dog.text);
   }
