@@ -142,9 +142,31 @@ window.onload = function() {
       refreshOutput(accumulator.toString());
     };
   
-    document.getElementById('btn_op_bgColor').onclick = function() {
-      document.body.classList.toggle('bg-alt');
-    };
+    document.getElementById('btn_op_prob').onclick = function() {
+        let x = parseInt(a);
+        if (isNaN(x)) {
+          refreshOutput('Введите корректное число');
+          return;
+        }
+        if (x < 2 || x > 12) {
+          refreshOutput('Сумма двух кубиков может быть от 2 до 12');
+          return;
+        }
+      
+        let ways = 0;
+        for (let d1 = 1; d1 <= 6; d1++) {
+          for (let d2 = 1; d2 <= 6; d2++) {
+            if (d1 + d2 === x) {
+              ways++;
+            }
+          }
+        }
+      
+        let probability = ways / 36;
+      
+        refreshOutput(probability.toString());
+        // a = probability.toString();
+      };
   
     document.getElementById('btn_op_resColor').onclick = function() {
       outputElement.classList.toggle('res-alt');
