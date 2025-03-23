@@ -9,36 +9,47 @@ export class MainPage {
   getData() {
     return [
       {
-        title: 'Golden Retriever',
+        title: 'Nike Air Force 1',
         content: `
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0gcUu-D8ElLcFw0TZSvCdBasqs4rG_YesHQm9Rw269lUZeRMN-dPzVZ9VH82U9Ji8OC3XHBke75d21Coy7Cho4Q"
+            src="https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/a324d91e-4888-4c4a-94d5-61cc8252a3d4/air-force-1-07-shoes-WrLlWX.png"
             class="img-fluid"
-            alt="Golden Retriever"
+            alt="Nike Air Force 1"
           />
-          <p>Golden Retrievers are friendly, intelligent, and devoted.</p>
+          <p>Популярные кроссовки от Nike. Прочный верх, классический силуэт.</p>
         `
       },
       {
-        title: 'German Shepherd',
+        title: 'Adidas Ultraboost',
         content: `
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/d/d0/German_Shepherd_-_DSC_0346_%2810096362833%29.jpg"
+            src="https://assets.adidas.com/images/w_600,f_auto,q_auto/8e078a6ecd344076aa46a87001247667_9366/Ultraboost_22_Shoes_White_GX5461_01_standard.jpg"
             class="img-fluid"
-            alt="German Shepherd"
+            alt="Adidas Ultraboost"
           />
-          <p>German Shepherds are known for their intelligence and loyalty.</p>
+          <p>Беговые кроссовки с мягкой амортизацией и удобной посадкой.</p>
         `
       },
       {
-        title: 'Bulldog',
+        title: 'Levi’s 501 Jeans',
         content: `
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Bulldog_inglese.jpg/800px-Bulldog_inglese.jpg"
+            src="https://lsco.scene7.com/is/image/lsco/005010089-front-pdp?$qv_desktop_full$"
             class="img-fluid"
-            alt="Bulldog"
+            alt="Levi’s 501 Jeans"
           />
-          <p>Bulldogs are calm and friendly, with a distinctive wrinkled face.</p>
+          <p>Классическая модель джинсов, остаётся популярной уже много лет.</p>
+        `
+      },
+      {
+        title: 'Apple AirPods Pro',
+        content: `
+          <img
+            src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MWP22?wid=2000&hei=2000&fmt=jpeg&qlt=95&.v=1591634795000"
+            class="img-fluid"
+            alt="Apple AirPods Pro"
+          />
+          <p>Беспроводные наушники с шумоподавлением и отличным качеством звука.</p>
         `
       }
     ];
@@ -49,13 +60,16 @@ export class MainPage {
   }
 
   clickCard(index, e) {
-    const cardId = e.target.dataset.id;
     const productPage = new ProductPage(this.parent, index);
     productPage.render();
   }
       
   getHTML() {
-    return `<div id="main-page" class="d-flex flex-wrap"></div>`;
+    return `
+      <h1 class="text-center mt-4">Моя корзина Wildberries</h1>
+      <p class="text-center">Здесь вы можете посмотреть товары и перейти к подробному описанию.</p>
+      <div id="main-page" class="d-flex flex-wrap justify-content-center mt-3"></div>
+    `;
   }
       
   render() {
@@ -66,7 +80,8 @@ export class MainPage {
     const data = this.getData();
     data.forEach((item, index) => {
       const accordion = new AccordionComponent(this.pageRoot);
-      accordion.render([item], `accordion-${index}`, this.clickCard.bind(this, index));
+      accordion.render([item], `cartAccordion-${index}`, this.clickCard.bind(this, index));
     });
+
   }
 }
