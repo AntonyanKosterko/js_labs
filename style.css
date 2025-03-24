@@ -7,7 +7,6 @@ body {
 
 .accordion-button {
     background-color: #CA2FE3;
-    border: 1px solid #5E269B;
     color: #FFFFFF;
     font-weight: bold;
 }
@@ -55,3 +54,10 @@ body {
     border: 1px solid #5E269B;
     color: #FFFFFF;
 }
+
+/*
+.analytics-btn{
+    background-color: #B04DFD;
+    color: #FFFFFF;
+}
+*/

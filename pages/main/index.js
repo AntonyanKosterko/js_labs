@@ -78,10 +78,7 @@ export class MainPage {
         <div id="main-page" class="d-flex flex-wrap justify-content-center mt-3"></div>
         
         <div class="d-flex justify-content-center mt-4">
-          <button class="btn btn-success" id="checkout-button">
-            Перейти к оформлению
-          </button>
-          <button class="btn btn-info ms-2" id="analytics-button">
+          <button class="btn analytics-btn btn-info ms-2" id="analytics-button">
             Аналитика
           </button>
         </div>
@@ -102,11 +99,6 @@ export class MainPage {
     const analyticsBtn = document.getElementById('analytics-button');
     analyticsBtn.addEventListener('click', () => {
       this.goToAnalytics();
-    });
-
-    const checkoutButton = document.getElementById('checkout-button');
-    checkoutButton.addEventListener('click', () => {
-      alert('Здесь будет оформление заказа!');
     });
   }
 }
