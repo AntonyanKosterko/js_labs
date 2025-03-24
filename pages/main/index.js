@@ -1,5 +1,6 @@
 import {AccordionComponent} from "../../components/accordion/index.js";
 import {ProductPage} from "../product/index.js";
+import {AnalyticsPage} from "../analytics/index.js";
 
 export class MainPage {
   constructor(parent) {
@@ -63,19 +64,34 @@ export class MainPage {
     const productPage = new ProductPage(this.parent, index);
     productPage.render();
   }
+
+  goToAnalytics() {
+    const analyticsPage = new AnalyticsPage(this.parent);
+    analyticsPage.render();
+  }
       
   getHTML() {
     return `
-      <h1 class="text-center mt-4">Моя корзина Wildberries</h1>
-      <p class="text-center">Здесь вы можете посмотреть товары и перейти к подробному описанию.</p>
-      <div id="main-page" class="d-flex flex-wrap justify-content-center mt-3"></div>
+      <div>
+        <h1 class="text-center mt-4">Моя корзина Wildberries</h1>
+        <p class="text-center">Здесь вы можете посмотреть товары и перейти к подробному описанию.</p>
+        <div id="main-page" class="d-flex flex-wrap justify-content-center mt-3"></div>
+        
+        <div class="d-flex justify-content-center mt-4">
+          <button class="btn btn-success" id="checkout-button">
+            Перейти к оформлению
+          </button>
+          <button class="btn btn-info ms-2" id="analytics-button">
+            Аналитика
+          </button>
+        </div>
+      </div>
     `;
   }
       
   render() {
     this.parent.innerHTML = '';
-    const html = this.getHTML();
-    this.parent.insertAdjacentHTML('beforeend', html);
+    this.parent.insertAdjacentHTML('beforeend', this.getHTML());
     
     const data = this.getData();
     data.forEach((item, index) => {
@@ -83,5 +99,14 @@ export class MainPage {
       accordion.render([item], `cartAccordion-${index}`, this.clickCard.bind(this, index));
     });
 
+    const analyticsBtn = document.getElementById('analytics-button');
+    analyticsBtn.addEventListener('click', () => {
+      this.goToAnalytics();
+    });
+
+    const checkoutButton = document.getElementById('checkout-button');
+    checkoutButton.addEventListener('click', () => {
+      alert('Здесь будет оформление заказа!');
+    });
   }
 }
