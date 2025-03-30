@@ -61,3 +61,126 @@ body {
     color: #FFFFFF;
 }
 */
+
+
+
+
+/* БЛОК АНАЛИТИКИ /*
+
+/* Основные стили */
+.analytics-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .analytics-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .analytics-title {
+    color: #333;
+    font-weight: 600;
+    border-bottom: 2px solid #D634E1;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+  }
+  
+  .analytics-section {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .section-icon {
+    color: #D634E1;
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+  }
+  
+  .section-title {
+    color: #444;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  /* Элементы формы */
+  .input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .form-textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    resize: vertical;
+  }
+  
+  .primary-button {
+    background-color: #D634E1;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+  }
+  
+  .primary-button:hover {
+    background-color: #D634E1;
+  }
+  
+  /* Результаты */
+  .input-label {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .result-label {
+    color: #666;
+    margin: 1rem 0 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .result-box {
+    background: #f8f8f8;
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 3px solid #D634E1;
+    word-break: break-word;
+  }
+  
+  .back-button-wrapper {
+    text-align: center;
+    margin-top: 2rem;
+  }
+  
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');

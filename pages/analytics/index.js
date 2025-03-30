@@ -1,6 +1,6 @@
-import {concatenate} from "../../services/concatenate.js";
-import {erase} from "../../services/erase.js";
-import {maxQualityDifference} from "../../services/maxQualityDifference.js";
+import {formatProductFeatures} from "../../services/formatProductFeatures.js";
+import {sanitizeProductAttributes} from "../../services/sanitizeProductAttributes.js";
+import {findMaxPriceCombinationDifference} from "../../services/findMaxPriceCombinationDifference.js";
 import {groupAnagrams} from "../../services/groupAnagrams.js";
 
 import {BackButtonComponent} from "../../components/back-button/index.js";
@@ -16,43 +16,71 @@ export class AnalyticsPage {
 
   getHTML() {
     return `
-      <div id="analytics-page" class="p-4">
-        <h2>Аналитика Wildberries</h2>
-        
-        <!-- Пример 1: concatenate -->
-        <div class="mt-3">
-          <h4>Склеиваем товары:</h4>
-          <div>Товары: <span id="concat-items"></span></div>
-        </div>
-
-        <!-- Пример 2: erase -->
-        <div class="mt-3">
-          <h4>Очистка корзины от ложных значений:</h4>
-          <div id="erase-result"></div>
-        </div>
-
-        <!-- Пример 3: maxQualityDifference -->
-        <div class="mt-3">
-          <h4>Максимальная качественная разница:</h4>
-          <label>Введите массив чисел, через запятую:</label>
-          <input type="text" id="mq-input" value="5,6,2,7,4" />
-          <button id="mq-button" class="btn btn-primary">Рассчитать</button>
-          <p>Результат: <span id="mq-result"></span></p>
-        </div>
-
-        <!-- Пример 4: groupAnagrams -->
-        <div class="mt-3">
-          <h4>Группировка слов-анаграмм:</h4>
-          <label>Введите слова, разделённые запятой:</label><br />
-          <textarea id="anagram-input" rows="3" cols="40">
-listen, silent, license, silence, cat, tac, act
-          </textarea><br />
-          <button id="anagram-button" class="btn btn-primary">Показать анаграммы</button>
-          <div id="anagram-result" class="mt-2"></div>
-        </div>
-
-        <div id="back-button-container" class="mt-4"></div>
+    <div id="analytics-page" class="analytics-container">
+    <div class="analytics-header">
+      <h2 class="analytics-title">Аналитика Wildberries</h2>
+    </div>
+    
+    <div class="analytics-section">
+      <div class="section-header">
+        <i class="fas fa-link section-icon"></i>
+        <h4 class="section-title">Склеивание характеристик товаров</h4>
       </div>
+      <div class="section-content">
+        <p class="input-label">Товары для склеивания:</p>
+        <div class="result-box" id="concat-items"></div>
+      </div>
+    </div>
+  
+    <div class="analytics-section">
+      <div class="section-header">
+        <i class="fas fa-broom section-icon"></i>
+        <h4 class="section-title">Очистка корзины</h4>
+      </div>
+      <div class="section-content">
+        <p class="input-label">Результат очистки:</p>
+        <div class="result-box" id="erase-result"></div>
+      </div>
+    </div>
+  
+    <div class="analytics-section">
+      <div class="section-header">
+        <i class="fas fa-chart-line section-icon"></i>
+        <h4 class="section-title">Анализ цен</h4>
+      </div>
+      <div class="section-content">
+        <p class="input-label">Введите цены товаров через запятую:</p>
+        <div class="input-group">
+          <input type="text" id="mq-input" class="form-input" value="5,6,2,7,4" />
+          <button id="mq-button" class="primary-button">
+            <i class="fas fa-calculator"></i> Рассчитать
+          </button>
+        </div>
+        <p class="result-label">Результат:</p>
+        <div class="result-box" id="mq-result"></div>
+      </div>
+    </div>
+  
+    <div class="analytics-section">
+      <div class="section-header">
+        <i class="fas fa-font section-icon"></i>
+        <h4 class="section-title">Поиск анаграмм</h4>
+      </div>
+      <div class="section-content">
+        <p class="input-label">Введите слова через запятую:</p>
+        <textarea id="anagram-input" class="form-textarea" rows="3">
+  listen, silent, license, silence, cat, tac, act
+        </textarea>
+        <button id="anagram-button" class="primary-button">
+          <i class="fas fa-search"></i> Найти анаграммы
+        </button>
+        <p class="result-label">Результат:</p>
+        <div class="result-box" id="anagram-result"></div>
+      </div>
+    </div>
+  
+    <div id="back-button-container" class="back-button-wrapper"></div>
+  </div>
     `;
   }
 
@@ -67,10 +95,10 @@ listen, silent, license, silence, cat, tac, act
     const sampleItems = ['Nike AF1', 'Apple AirPods', 'Levi’s Jeans'];
     const delimiter = ' | ';
     const concatElem = document.getElementById('concat-items');
-    concatElem.textContent = concatenate(sampleItems, delimiter);
+    concatElem.textContent = formatProductFeatures(sampleItems, delimiter);
 
     const basketData = [0, 'iPhone 14', undefined, ' ', null, 'Guitar', false];
-    const cleaned = erase(basketData);
+    const cleaned = sanitizeProductAttributes(basketData);
     document.getElementById('erase-result').textContent =
       `Исходные: ${JSON.stringify(basketData)} | Очищенные: ${JSON.stringify(cleaned)}`;
 
@@ -83,7 +111,7 @@ listen, silent, license, silence, cat, tac, act
         .split(',')
         .map(num => Number(num.trim()))
         .filter(n => !isNaN(n));
-      const diff = maxQualityDifference(nums);
+      const diff = findMaxPriceCombinationDifference(nums);
       mqResult.textContent = diff;
     });
 
