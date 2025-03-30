@@ -5,9 +5,10 @@ import {AnalyticsPage} from "../analytics/index.js";
 export class MainPage {
   constructor(parent) {
     this.parent = parent;
+    this.products = this.getInitialData(); // Инициализируем данные
   }
 
-  getData() {
+  getInitialData() {
     return [
       {
         title: 'Nike Air Force 1',
@@ -69,6 +70,34 @@ export class MainPage {
     const analyticsPage = new AnalyticsPage(this.parent);
     analyticsPage.render();
   }
+
+  addProduct() {
+    if (this.products.length > 0) {
+      // Дублируем первый товар
+      const firstProduct = JSON.parse(JSON.stringify(this.products[0]));
+      firstProduct.title = `${firstProduct.title}`;
+      this.products.push(firstProduct);
+      this.renderProducts();
+    }
+  }
+
+  removeProduct() {
+    if (this.products.length > 0) {
+      // Удаляем последний товар
+      this.products.pop();
+      this.renderProducts();
+    }
+  }
+
+  renderProducts() {
+    const productsContainer = this.pageRoot;
+    productsContainer.innerHTML = '';
+    
+    this.products.forEach((item, index) => {
+      const accordion = new AccordionComponent(productsContainer);
+      accordion.render([item], `cartAccordion-${index}`, this.clickCard.bind(this, index));
+    });
+  }
       
   getHTML() {
     return `
@@ -77,8 +106,14 @@ export class MainPage {
         <p class="text-center">Здесь вы можете посмотреть товары и перейти к подробному описанию.</p>
         <div id="main-page" class="d-flex flex-wrap justify-content-center mt-3"></div>
         
-        <div class="d-flex justify-content-center mt-4">
-          <button class="btn analytics-btn btn-info ms-2" id="analytics-button">
+        <div class="d-flex justify-content-center mt-4 gap-2">
+          <button class="btn btn-success analytics-btn" id="add-button">
+            Добавить товар
+          </button>
+          <button class="btn btn-danger analytics-btn" id="remove-button">
+            Удалить товар
+          </button>
+          <button class="btn btn-info analytics-btn" id="analytics-button">
             Аналитика
           </button>
         </div>
@@ -90,14 +125,17 @@ export class MainPage {
     this.parent.innerHTML = '';
     this.parent.insertAdjacentHTML('beforeend', this.getHTML());
     
-    const data = this.getData();
-    data.forEach((item, index) => {
-      const accordion = new AccordionComponent(this.pageRoot);
-      accordion.render([item], `cartAccordion-${index}`, this.clickCard.bind(this, index));
+    this.renderProducts();
+
+    document.getElementById('add-button').addEventListener('click', () => {
+      this.addProduct();
     });
 
-    const analyticsBtn = document.getElementById('analytics-button');
-    analyticsBtn.addEventListener('click', () => {
+    document.getElementById('remove-button').addEventListener('click', () => {
+      this.removeProduct();
+    });
+
+    document.getElementById('analytics-button').addEventListener('click', () => {
       this.goToAnalytics();
     });
   }

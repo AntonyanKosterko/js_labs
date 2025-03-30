@@ -19,9 +19,11 @@ body {
     background-color: #B04DFD;
 }
 
+/*
 .accordion-item {
     border: 1px solid #5E269B;
 }
+*/
 
 .accordion-body {
     background-color: #FFFFFF;
@@ -55,12 +57,18 @@ body {
     color: #FFFFFF;
 }
 
-/*
+
 .analytics-btn{
     background-color: #B04DFD;
     color: #FFFFFF;
+    border: none;
 }
-*/
+
+
+.analytics-btn:hover{
+    background-color: #B032FD;
+    color: #FFFFFF;
+}
 
 
 
