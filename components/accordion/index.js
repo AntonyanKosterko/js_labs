@@ -4,6 +4,7 @@ export class AccordionComponent {
   }
 
   getHTML(items, accordionId = 'dogAccordion') {
+    console.log(items)
     return `
       <div class="w-75 mx-auto">
         <div class="accordion" id="${accordionId}">
