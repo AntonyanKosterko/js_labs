@@ -73,7 +73,6 @@ export class MainPage {
 
   addProduct() {
     if (this.products.length > 0) {
-      // Дублируем первый товар
       const firstProduct = JSON.parse(JSON.stringify(this.products[0]));
       firstProduct.title = `${firstProduct.title}`;
       this.products.push(firstProduct);
@@ -81,13 +80,25 @@ export class MainPage {
     }
   }
 
+  sortProducts() {
+    this.products.sort((a, b) => {
+      const compareResult = a.title.localeCompare(b.title);
+      return this.sortAscending ? compareResult : -compareResult;
+    });
+    
+    this.sortAscending = !this.sortAscending;
+    
+    this.renderProducts();
+  }
+
+  /*
   removeProduct() {
     if (this.products.length > 0) {
-      // Удаляем последний товар
       this.products.pop();
       this.renderProducts();
     }
   }
+  */
 
   renderProducts() {
     const productsContainer = this.pageRoot;
@@ -110,8 +121,8 @@ export class MainPage {
           <button class="btn btn-success analytics-btn" id="add-button">
             Добавить товар
           </button>
-          <button class="btn btn-danger analytics-btn" id="remove-button">
-            Удалить товар
+          <button class="btn btn-warning analytics-btn" id="sort-button">
+            Сортировать по названию
           </button>
           <button class="btn btn-info analytics-btn" id="analytics-button">
             Аналитика
@@ -120,7 +131,7 @@ export class MainPage {
       </div>
     `;
   }
-      
+
   render() {
     this.parent.innerHTML = '';
     this.parent.insertAdjacentHTML('beforeend', this.getHTML());
@@ -131,8 +142,8 @@ export class MainPage {
       this.addProduct();
     });
 
-    document.getElementById('remove-button').addEventListener('click', () => {
-      this.removeProduct();
+    document.getElementById('sort-button').addEventListener('click', () => {
+      this.sortProducts();
     });
 
     document.getElementById('analytics-button').addEventListener('click', () => {
