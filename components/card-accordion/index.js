@@ -51,6 +51,9 @@ export class CardAccordionComponent {
               <div class="d-flex gap-2">
                 <button 
                   class="btn btn-success" 
+                  style="background-color: #7D18F8;
+                    border : none;
+                  "
                   data-id="${index}" 
                   id="${cardId}-button-${index}"
                 >
@@ -58,6 +61,8 @@ export class CardAccordionComponent {
                 </button>
                 <button 
                   class="btn btn-danger delete-button" 
+                  style="background-color: #7D18F8;
+                  border : none;"
                   data-id="${index}"
                 >
                   Удалить
