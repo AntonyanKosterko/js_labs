@@ -2,7 +2,7 @@
  * Ищет 4 разных индекса w, x, y, z в массиве целых чисел,
  * чтобы максимизировать (nums[w]*nums[x]) - (nums[y]*nums[z]).
  */
- export function maxQualityDifference(nums) {
+ export function findMaxPriceCombinationDifference(nums) {
     let maxDiff = Number.NEGATIVE_INFINITY;
   
     for (let w = 0; w < nums.length; w++) {

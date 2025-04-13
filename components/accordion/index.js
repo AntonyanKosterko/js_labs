@@ -33,6 +33,9 @@ export class AccordionComponent {
                   <button class="btn btn-primary mt-2" data-id="${index}" id="${accordionId}-button-${index}">
                     Перейти к продукту
                   </button>
+                  <button class="btn btn-primary mt-2 ms-2 delete-button" data-id="${index}">
+                    Удалить
+                  </button>
                 </div>
               </div>
             </div>
@@ -45,12 +48,26 @@ export class AccordionComponent {
   render(items, accordionId = 'dogAccordion', buttonClickCallback) {
     const html = this.getHTML(items, accordionId);
     this.parent.insertAdjacentHTML('beforeend', html);
+
     if (buttonClickCallback) {
       items.forEach((item, index) => {
         const button = document.getElementById(`${accordionId}-button-${index}`);
         if (button) {
           button.addEventListener('click', buttonClickCallback);
         }
+      });
+    }
+
+    const accordionElement = this.parent.querySelector(`#${accordionId}`);
+    if (accordionElement) {
+      const deleteButtons = accordionElement.querySelectorAll('.delete-button');
+      deleteButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+          const accordionItem = event.currentTarget.closest('.accordion-item');
+          if (accordionItem) {
+            accordionItem.remove();
+          }
+        });
       });
     }
   }
