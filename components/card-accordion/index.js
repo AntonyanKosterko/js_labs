@@ -1,33 +1,30 @@
+import { ajax } from "../../modules/ajax.js";
+import { urls } from "../../modules/urls.js";
+import { MainPage } from "../../pages/main/index.js";
+import { AddProductPage } from "../../pages/add-product/index.js";
+
 export class CardAccordionComponent {
   constructor(parent) {
     this.parent = parent;
   }
 
-  getHTML(items, cardId = 'cardAccordion') {
+  getHTML(items, cardId = "cardAccordion") {
     return items.map((item, index) => `
-      <!-- Весь блок карточки -->
-      <div class="card mb-3" 
-           style="background-color: #B032FD; color: #fff;">
-        <!-- Изображение -->
+      <div class="card mb-3" style="background-color: #B032FD; color: #fff;">
         <img 
           src="${item.src}" 
           alt="product-image"
           style="width: 100%; max-height: 200px; object-fit: cover;"
-        >
-        
-        <!-- Верхняя часть карточки (название + иконка) -->
+        />
         <div class="card-body pb-2 pt-2" style="background-color: inherit;">
-          <!-- d-flex: чтобы разместить заголовок слева и иконку справа -->
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">${item.title}</h5>
-            
-            <!-- Кнопка-стрелочка (используем иконку из Bootstrap Icons) -->
             <button 
-              class="btn p-0" 
-              type="button" 
-              data-bs-toggle="collapse" 
-              data-bs-target="#${cardId}-collapse-${index}" 
-              aria-expanded="false" 
+              class="btn p-0"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#${cardId}-collapse-${index}"
+              aria-expanded="false"
               aria-controls="${cardId}-collapse-${index}"
               style="border: none; background: none; color: #fff;"
             >
@@ -35,68 +32,95 @@ export class CardAccordionComponent {
             </button>
           </div>
         </div>
-        
-        <!-- Разворачиваемый блок (описание + кнопки) -->
-        <div 
-          id="${cardId}-collapse-${index}" 
+        <div
+          id="${cardId}-collapse-${index}"
           class="collapse"
           style="background-color: #B032FD;"
         >
-          <!-- Внутренний блок с описанием и кнопками внизу -->
           <div class="card-body pt-2" style="background-color: inherit;">
-            <!-- Текст описания -->
             <p class="mb-3">${item.text}</p>
-
-            <!-- Кнопка «Перейти к продукту» и «Удалить» -->
-            <div class="d-flex gap-2">
-              <button 
-                class="btn btn-success" 
-                style="background-color: #7D18F8;
-                  border : none;
-                "
-                data-id="${index}" 
-                id="${cardId}-button-${index}"
-              >
-                Перейти к продукту
-              </button>
-              <button 
-                class="btn btn-danger delete-button" 
-                style="background-color: #7D18F8;
-                border : none;"
-                data-id="${index}"
-              >
-                Удалить
-              </button>
+            <div class="d-flex flex-column gap-2">
+              <div class="d-flex gap-2">
+                <button
+                  class="btn btn-success"
+                  type="button"
+                  style="background-color: #7D18F8; border: none;"
+                  data-id="${item.id}"
+                  id="${cardId}-button-${index}"
+                >
+                  Перейти к продукту
+                </button>
+                <button
+                  class="btn btn-danger delete-button"
+                  type="button"
+                  style="background-color: #7D18F8; border: none;"
+                  data-id="${item.id}"
+                >
+                  Удалить
+                </button>
+              </div>
+              <div>
+                <button
+                  class="btn btn-primary edit-button"
+                  type="button"
+                  style="background-color: #7D18F8; border: none;"
+                  data-id="${item.id}"
+                >
+                  Редактировать
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    `).join('');
+    `).join("");
   }
 
-  render(items, cardId = 'cardAccordion', buttonClickCallback) {
+  render(items, cardId = "cardAccordion", buttonClickCallback) {
     const html = this.getHTML(items, cardId);
-    this.parent.insertAdjacentHTML('beforeend', html);
+    this.parent.insertAdjacentHTML("beforeend", html);
 
     if (buttonClickCallback) {
       items.forEach((item, index) => {
         const productButton = document.getElementById(`${cardId}-button-${index}`);
         if (productButton) {
-          productButton.addEventListener('click', (event) => {
+          productButton.addEventListener("click", (event) => {
+            event.preventDefault();
             buttonClickCallback(event);
           });
         }
       });
     }
 
-    const cardContainer = this.parent;
-    const deleteButtons = cardContainer.querySelectorAll('.delete-button');
+    const editButtons = this.parent.querySelectorAll(".edit-button");
+    editButtons.forEach((editButton) => {
+      editButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        const productId = editButton.dataset.id;
+        const appRoot = document.getElementById("root");
+        const editProductPage = new AddProductPage(appRoot, true, productId);
+        editProductPage.render();
+      });
+    });
+
+    const deleteButtons = this.parent.querySelectorAll(".delete-button");
     deleteButtons.forEach((deleteButton) => {
-      deleteButton.addEventListener('click', (event) => {
-        const card = event.currentTarget.closest('.card');
-        if (card) {
-          card.remove();
-        }
+      deleteButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        const productId = deleteButton.dataset.id;
+        ajax.delete(
+          urls.deleteProduct(productId),
+          {},
+          () => {
+            const card = deleteButton.closest(".card");
+            if (card) {
+              card.remove();
+            }
+          },
+          (err) => {
+            console.error("Ошибка при удалении:", err);
+          }
+        );
       });
     });
   }

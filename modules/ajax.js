@@ -65,12 +65,7 @@ class Ajax {
             }
         };
     }
-
-    /**
-     * Обработчик ответа (приватный метод)
-     * @param {XMLHttpRequest} xhr - Объект запроса
-     * @param {function} callback - Функция обратного вызова
-     */
+    
     _handleResponse(xhr, callback) {
         try {
             const data = xhr.responseText ? JSON.parse(xhr.responseText) : null;

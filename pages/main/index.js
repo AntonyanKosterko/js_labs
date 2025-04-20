@@ -85,6 +85,7 @@ export class MainPage {
       colEl.className = "col-6 mb-4";
       rowEl.appendChild(colEl);
       const cardAccordion = new CardAccordionComponent(colEl);
+      console.log(index);
       cardAccordion.render(
         [item],
         `cardAccordion-${index}`,

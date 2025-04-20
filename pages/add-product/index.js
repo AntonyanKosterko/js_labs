@@ -4,15 +4,29 @@ import { MainPage } from "../main/index.js";
 import { HeaderComponent } from "../../components/header/index.js";
 
 export class AddProductPage {
-  constructor(parent) {
+  constructor(parent, isEdit = false, productId = null) {
     this.parent = parent;
+    this.isEdit = isEdit;
+    this.productId = productId;
+
+    this.productData = null;
   }
 
   getHTML() {
+    const pageTitle = this.isEdit 
+      ? "Редактировать товар" 
+      : "Добавить новый товар";
+
+    const buttonTitle = this.isEdit 
+      ? "Обновить товар" 
+      : "Добавить";
+
     return `
       <div>
-        <h1 class="text-center mt-4">Добавить новый товар</h1>
-        <p class="text-center">Введите данные для нового товара.</p>
+        <h1 class="text-center mt-4">${pageTitle}</h1>
+        <p class="text-center">
+          ${this.isEdit ? "Измените нужные поля и сохраните." : "Введите данные для нового товара."}
+        </p>
         <div class="d-flex justify-content-center mt-3">
           <form id="add-product-form" style="width: 600px;">
             <div class="mb-3">
@@ -27,30 +41,86 @@ export class AddProductPage {
               <label for="product-src" class="form-label">Ссылка на изображение</label>
               <input type="text" class="form-control" id="product-src" />
             </div>
-            <button type="submit" class="btn btn-primary">Добавить</button>
+            <button type="submit" class="btn btn-primary">${buttonTitle}</button>
           </form>
         </div>
       </div>
     `;
   }
 
+  fillForm() {
+    if (!this.productData) return;
+
+    document.getElementById("product-title").value = this.productData.title || "";
+    document.getElementById("product-text").value = this.productData.text || "";
+    document.getElementById("product-src").value = this.productData.src || "";
+  }
+
   handleSubmit(event) {
     event.preventDefault();
+
     const title = document.getElementById("product-title").value.trim();
     const text = document.getElementById("product-text").value.trim();
     const imageLink = document.getElementById("product-src").value.trim();
+
     const data = { title, text, src: imageLink };
-    ajax.post(urls.createProduct(), data, () => {
-      const mainPage = new MainPage(this.parent);
-      mainPage.render();
-    });
+
+    if (this.isEdit && this.productId) {
+      ajax.patch(
+        urls.patchProduct(this.productId), 
+        data, 
+        () => {
+          const mainPage = new MainPage(this.parent);
+          mainPage.render();
+        },
+        (err) => {
+          console.error("Ошибка при обновлении товара:", err);
+        }
+      );
+    } else {
+      ajax.post(
+        urls.createProduct(),
+        data,
+        () => {
+          const mainPage = new MainPage(this.parent);
+          mainPage.render();
+        },
+        (err) => {
+          console.error("Ошибка при добавлении товара:", err);
+        }
+      );
+    }
+  }
+
+  loadProductData() {
+    if (!this.productId) {
+      return;
+    }
+
+    ajax.get(
+      urls.getProductByIndex(this.productId),
+      (product) => {
+        this.productData = product;
+        this.fillForm();
+      },
+      (err) => {
+        console.error("Ошибка при загрузке товара:", err);
+      }
+    );
   }
 
   render() {
     this.parent.innerHTML = "";
+
     const header = new HeaderComponent(this.parent, true);
     header.render();
+
     this.parent.insertAdjacentHTML("beforeend", this.getHTML());
+
+    if (this.isEdit) {
+      this.loadProductData();
+    }
+
     const formEl = document.getElementById("add-product-form");
     formEl.addEventListener("submit", this.handleSubmit.bind(this));
   }

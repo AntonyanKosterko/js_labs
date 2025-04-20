@@ -16,10 +16,8 @@ export class HeaderComponent {
     titleEl.textContent = "WB";
     headerEl.appendChild(titleEl);
 
-    // Сначала добавляем headerEl в DOM
     this.parent.appendChild(headerEl);
 
-    // Затем, если нужна кнопка "Домой"
     if (this.showHomeButton) {
       const buttonContainer = document.createElement("div");
       headerEl.appendChild(buttonContainer);
