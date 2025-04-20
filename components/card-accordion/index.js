@@ -1,4 +1,3 @@
-import { ajax } from "../../modules/ajax.js";
 import { urls } from "../../modules/urls.js";
 import { MainPage } from "../../pages/main/index.js";
 import { AddProductPage } from "../../pages/add-product/index.js";
@@ -108,19 +107,22 @@ export class CardAccordionComponent {
       deleteButton.addEventListener("click", (event) => {
         event.preventDefault();
         const productId = deleteButton.dataset.id;
-        ajax.delete(
-          urls.deleteProduct(productId),
-          {},
-          () => {
-            const card = deleteButton.closest(".card");
-            if (card) {
-              card.remove();
+
+        fetch(urls.deleteProduct(productId), {
+          method: "DELETE",
+        })
+          .then((res) => {
+            if (!res.ok) {
+              return Promise.reject(res.statusText);
             }
-          },
-          (err) => {
-            console.error("Ошибка при удалении:", err);
-          }
-        );
+            const appRoot = document.getElementById("root");
+            const mainPage = new MainPage(appRoot);
+            mainPage.render();
+            return res.json(); 
+          })
+          .catch((err) => {
+            console.error("Ошибка при удалении товара:", err);
+          });
       });
     });
   }

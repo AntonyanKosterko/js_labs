@@ -1,4 +1,3 @@
-import { ajax } from "../../modules/ajax.js";
 import { urls } from "../../modules/urls.js";
 import { MainPage } from "../main/index.js";
 import { HeaderComponent } from "../../components/header/index.js";
@@ -8,24 +7,25 @@ export class AddProductPage {
     this.parent = parent;
     this.isEdit = isEdit;
     this.productId = productId;
-
     this.productData = null;
   }
 
   getHTML() {
-    const pageTitle = this.isEdit 
-      ? "Редактировать товар" 
+    const pageTitle = this.isEdit
+      ? "Редактировать товар"
       : "Добавить новый товар";
-
-    const buttonTitle = this.isEdit 
-      ? "Обновить товар" 
+    const buttonTitle = this.isEdit
+      ? "Обновить товар"
       : "Добавить";
 
     return `
       <div>
         <h1 class="text-center mt-4">${pageTitle}</h1>
         <p class="text-center">
-          ${this.isEdit ? "Измените нужные поля и сохраните." : "Введите данные для нового товара."}
+          ${this.isEdit
+            ? "Измените нужные поля и сохраните."
+            : "Введите данные для нового товара."
+          }
         </p>
         <div class="d-flex justify-content-center mt-3">
           <form id="add-product-form" style="width: 600px;">
@@ -50,7 +50,6 @@ export class AddProductPage {
 
   fillForm() {
     if (!this.productData) return;
-
     document.getElementById("product-title").value = this.productData.title || "";
     document.getElementById("product-text").value = this.productData.text || "";
     document.getElementById("product-src").value = this.productData.src || "";
@@ -58,37 +57,53 @@ export class AddProductPage {
 
   handleSubmit(event) {
     event.preventDefault();
-
     const title = document.getElementById("product-title").value.trim();
     const text = document.getElementById("product-text").value.trim();
     const imageLink = document.getElementById("product-src").value.trim();
-
     const data = { title, text, src: imageLink };
 
     if (this.isEdit && this.productId) {
-      ajax.patch(
-        urls.patchProduct(this.productId), 
-        data, 
-        () => {
+      fetch(urls.patchProduct(this.productId), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            return Promise.reject(res.statusText);
+          }
           const mainPage = new MainPage(this.parent);
           mainPage.render();
-        },
-        (err) => {
+          return res.json();
+        })
+        .then(() => {
+          const mainPage = new MainPage(this.parent);
+          mainPage.render();
+        })
+        .catch((err) => {
           console.error("Ошибка при обновлении товара:", err);
-        }
-      );
+        });
     } else {
-      ajax.post(
-        urls.createProduct(),
-        data,
-        () => {
+      fetch(urls.createProduct(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            return Promise.reject(res.statusText);
+          }
           const mainPage = new MainPage(this.parent);
           mainPage.render();
-        },
-        (err) => {
+          return res.json();
+        })
+        .then(() => {
+          const mainPage = new MainPage(this.parent);
+          mainPage.render();
+        })
+        .catch((err) => {
           console.error("Ошибка при добавлении товара:", err);
-        }
-      );
+        });
     }
   }
 
@@ -96,25 +111,26 @@ export class AddProductPage {
     if (!this.productId) {
       return;
     }
-
-    ajax.get(
-      urls.getProductByIndex(this.productId),
-      (product) => {
+    fetch(urls.getProductByIndex(this.productId))
+      .then((res) => {
+        if (!res.ok) {
+          return Promise.reject(res.statusText);
+        }
+        return res.json();
+      })
+      .then((product) => {
         this.productData = product;
         this.fillForm();
-      },
-      (err) => {
+      })
+      .catch((err) => {
         console.error("Ошибка при загрузке товара:", err);
-      }
-    );
+      });
   }
 
   render() {
     this.parent.innerHTML = "";
-
     const header = new HeaderComponent(this.parent, true);
     header.render();
-
     this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
     if (this.isEdit) {

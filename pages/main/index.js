@@ -3,9 +3,7 @@ import { ProductPage } from "../product/index.js";
 import { AnalyticsPage } from "../analytics/index.js";
 import { AddProductPage } from "../add-product/index.js";
 import { HeaderComponent } from "../../components/header/index.js";
-
-import {ajax} from "../../modules/ajax.js";
-import {urls} from "../../modules/urls.js";
+import { urls } from "../../modules/urls.js";
 
 export class MainPage {
   constructor(parent) {
@@ -15,10 +13,15 @@ export class MainPage {
   }
 
   getInitialData() {
-    ajax.get(urls.getAllProducts(), (data) => {
-      console.log(data)
-      this.renderProducts(data)
-    })
+    fetch(urls.getAllProducts())
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        this.renderProducts(data);
+      })
+      .catch((err) => {
+        console.error("Ошибка при получении товаров:", err);
+      });
   }
 
   get pageRoot() {
@@ -36,14 +39,6 @@ export class MainPage {
   }
 
   addProduct() {
-    /*
-    if (this.products.length > 0) {
-      const firstProduct = JSON.parse(JSON.stringify(this.products[0]));
-      firstProduct.title = `${firstProduct.title}`;
-      this.products.push(firstProduct);
-      this.renderProducts();
-    }
-      */
     const addProductPage = new AddProductPage(this.parent);
     addProductPage.render();
   }
@@ -54,38 +49,32 @@ export class MainPage {
       return this.sortAscending ? compareResult : -compareResult;
     });
     this.sortAscending = !this.sortAscending;
-  
     this.renderProducts();
   }
-  
 
   renderProducts(items) {
     if (items) {
       this.products = items;
     }
-    
     if (!this.products || !this.products.length) {
       this.pageRoot.innerHTML = "<p>Нет товаров</p>";
       return;
     }
-  
     const productsContainer = this.pageRoot;
     productsContainer.innerHTML = "";
     const fixedContainer = document.createElement("div");
     fixedContainer.style.width = "600px";
     fixedContainer.style.margin = "0 auto";
     productsContainer.appendChild(fixedContainer);
-  
     const rowEl = document.createElement("div");
     rowEl.className = "row";
     fixedContainer.appendChild(rowEl);
-  
+
     this.products.forEach((item, index) => {
       const colEl = document.createElement("div");
       colEl.className = "col-6 mb-4";
       rowEl.appendChild(colEl);
       const cardAccordion = new CardAccordionComponent(colEl);
-      console.log(index);
       cardAccordion.render(
         [item],
         `cardAccordion-${index}`,
@@ -93,7 +82,6 @@ export class MainPage {
       );
     });
   }
-  
 
   getHTML() {
     return `
@@ -120,11 +108,16 @@ export class MainPage {
     this.parent.innerHTML = "";
     const header = new HeaderComponent(this.parent, false);
     header.render();
-    
     this.parent.insertAdjacentHTML("beforeend", this.getHTML());
     this.getInitialData();
-    document.getElementById("add-button").addEventListener("click", () => this.addProduct());
-    document.getElementById("sort-button").addEventListener("click", () => this.sortProducts());
-    document.getElementById("analytics-button").addEventListener("click", () => this.goToAnalytics());
+    document
+      .getElementById("add-button")
+      .addEventListener("click", () => this.addProduct());
+    document
+      .getElementById("sort-button")
+      .addEventListener("click", () => this.sortProducts());
+    document
+      .getElementById("analytics-button")
+      .addEventListener("click", () => this.goToAnalytics());
   }
 }
