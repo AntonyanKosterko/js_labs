@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/AntonyanKosterko/js_labs#readme",
   "dependencies": {
+    "@nestjs/serve-static": "^5.0.3",
     "bootstrap": "^5.3.3"
   }
 }
